@@ -1,13 +1,11 @@
-import { useState } from 'react'
+import SearchingPage from "./components/SearchingPage";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <h1>Torre Exercise</h1>
+      <SearchingPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
