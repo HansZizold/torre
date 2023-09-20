@@ -62,7 +62,7 @@ TORRE PEOPLE SEARCH APP is an application that facilitates users to search for p
 
 ### Key Features <a name="key-features"></a>
 
-- **Instant search functionality** - As users type in the search bar, relevant profiles begin to appear.
+- **Manual Search Activation**: Users initiate the search by pressing the "Enter" key after typing their query in the search bar.
 - **Search history** - Users can view their recent searches for quick access to previously found profiles.
 - **Clickable profile results** - Each profile result is clickable, redirecting users to the individual's full profile on Torre.co.
 - **Profile images and placeholders** - Display of profile pictures if available, or a placeholder with the initial of the user's name if not.
@@ -77,15 +77,9 @@ TORRE PEOPLE SEARCH APP is an application that facilitates users to search for p
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-- [Github Repository](https://github.com/HansZizold/torre)
-
-<!-- Kanban Board -->
-
 <!-- GETTING STARTED -->
 
 ## 💻 Getting Started <a name="getting-started"></a>
-
-### Prerequisites
 
 ### Prerequisites
 
