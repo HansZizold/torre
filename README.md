@@ -73,7 +73,7 @@ TORRE PEOPLE SEARCH APP is an application that facilitates users to search for p
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 
-- [Live-Demo-Link](https://marriott-reservation.netlify.app/)
+- [Live-Demo-Link](https://fascinating-sherbet-21988e.netlify.app/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
