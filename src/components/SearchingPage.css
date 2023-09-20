@@ -137,3 +137,38 @@
   font-family: "Mulish", sans-serif;
   font-weight: 400;
 }
+
+.recent-searches {
+  width: 44%;
+  color: white;
+  position: relative;
+}
+
+.searches {
+  position: absolute;
+  top: 100%;  
+  /* left: 0; */
+  right: 0;  
+  z-index: 1;  
+  width: 40%;
+  background-color: #3A3B3F;
+  list-style-type: none;
+  margin-top: 8px;
+  border: 1px solid white;
+}
+
+.search-element {
+  border: 1px solid gray;
+  border-bottom: none;
+  padding: 8px;
+  font-family: "Mulish", sans-serif;
+  font-size: large;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
