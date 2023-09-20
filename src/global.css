@@ -1,0 +1,17 @@
+:root {
+  --nav-bg-color: #27292d;
+  --search-bg-color: #27292d;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('./assets/fonts/Mulish-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
