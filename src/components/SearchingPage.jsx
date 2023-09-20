@@ -3,14 +3,17 @@ import React, { useState, useEffect, useRef } from "react";
 import "./SearchingPage.css";
 
 const SearchingPage = () => {
+  // Ref for the container to manage click outside behavior
   const containerRef = useRef(null);
 
+  // State variables
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [recentSearches, setRecentSearches] = useState([]);
   const [showRecentSearches, setShowRecentSearches] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  // Event listener to handle click outside of the recent searches
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -27,6 +30,7 @@ const SearchingPage = () => {
     };
   }, []);
 
+  // Function to execute the search using Torre API
   const executeSearch = async (term = searchTerm) => {
     try {
       const url = "https://torre.ai/api/entities/_searchStream";
@@ -77,6 +81,7 @@ const SearchingPage = () => {
     }
   };
 
+  // Handler for clicking a recent search term
   const handleRecentSearchClick = (search) => {
     setSearchTerm(search);
     executeSearch(search);
@@ -85,6 +90,7 @@ const SearchingPage = () => {
 
   return (
     <div className="searching-page">
+      {/* Navigation bar section */}
       <div className="navbar">
         <button className="hamburger-button" aria-label="Toggle navigation">
           <img src="/hamburger.svg" alt="menu" />
@@ -93,11 +99,14 @@ const SearchingPage = () => {
           <img src="/torre.png" alt="Torre Logo" />
         </div>
       </div>
+      {/* Search bar section */}
       <div className="searchbar">
         <p className="search-text">Search</p>
         <p className="people-text">PEOPLE BY NAME</p>
       </div>
+      {/* Main search section */}
       <div className="search-section">
+        {/* Search input */}
         <input
           className="search-input"
           type="text"
@@ -118,6 +127,7 @@ const SearchingPage = () => {
           }}
         />
 
+        {/* Recent searches dropdown */}
         <div className="recent-searches" ref={containerRef}>
           {showRecentSearches && recentSearches.length > 0 && (
             <ul className="searches">
@@ -134,6 +144,7 @@ const SearchingPage = () => {
           )}
         </div>
 
+        {/* Displaying search results */}
         <div className="search-results">
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           {results.map((result, index) => {
