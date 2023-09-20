@@ -1,17 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "./SearchingPage.css";
 
 const SearchingPage = () => {
+  const containerRef = useRef(null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [recentSearches, setRecentSearches] = useState([]);
+  const [showRecentSearches, setShowRecentSearches] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    console.log(recentSearches);
-  }, [recentSearches]);
+    function handleClickOutside(event) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setShowRecentSearches(false);
+      }
+    }
 
-  const executeSearch = async () => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const executeSearch = async (term = searchTerm) => {
     try {
       const url = "https://torre.ai/api/entities/_searchStream";
       const headers = {
@@ -20,7 +36,7 @@ const SearchingPage = () => {
         "X-Torre-Identity": "",
       };
       const body = JSON.stringify({
-        query: searchTerm,
+        query: term,
         identityType: "person",
         limit: 20,
         meta: true,
@@ -35,20 +51,36 @@ const SearchingPage = () => {
       });
 
       const textResponse = await response.text();
+      if (!textResponse.trim()) {
+        console.warn("The server returned an empty response.");
+        setResults([]);
+        setErrorMessage(
+          "No results found for your search or there was an issue. Please try again."
+        );
+        return;
+      } else {
+        setErrorMessage(null);
+      }
       const items = textResponse
         .trim()
         .split("\n")
         .map((line) => JSON.parse(line));
       setResults(items);
 
-      setRecentSearches(prevSearches => {
+      setRecentSearches((prevSearches) => {
         const newSearches = [searchTerm, ...prevSearches];
         return [...new Set(newSearches)].slice(0, 10);
       });
-
+      setShowRecentSearches(true);
     } catch (error) {
       console.error("There was an error in the request:", error);
     }
+  };
+
+  const handleRecentSearchClick = (search) => {
+    setSearchTerm(search);
+    executeSearch(search);
+    setShowRecentSearches(false);
   };
 
   return (
@@ -71,39 +103,78 @@ const SearchingPage = () => {
           type="text"
           placeholder="Type the name and hit Enter"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setShowRecentSearches(false);
+          }}
+          onFocus={() => {
+            setShowRecentSearches(true);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               executeSearch();
+              setShowRecentSearches(false);
             }
           }}
         />
+
+        <div className="recent-searches" ref={containerRef}>
+          {showRecentSearches && recentSearches.length > 0 && (
+            <ul className="searches">
+              {recentSearches.map((search, index) => (
+                <li
+                  className="search-element"
+                  key={index}
+                  onClick={() => handleRecentSearchClick(search)}
+                >
+                  {search}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <div className="search-results">
-          {results.map((result, index) => (
-            <div key={index} className="search-result-item">
-              <div className="result-image-container">
-                {result.imageUrl ? (
-                  <img
-                    src={result.imageUrl}
-                    alt={`${result.name}'s profile`}
-                    className="result-image"
-                  />
-                ) : (
-                  <div className="result-placeholder">
-                    {result.name.charAt(0).toUpperCase()}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {results.map((result, index) => {
+            // Construir la URL usando el "username"
+            const profileUrl = `https://torre.ai/${result.username}`;
+
+            return (
+              <a
+                key={index}
+                href={profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <div className="search-result-item">
+                  <div className="result-image-container">
+                    {result.imageUrl ? (
+                      <img
+                        src={result.imageUrl}
+                        alt={`${result.name}'s profile`}
+                        className="result-image"
+                      />
+                    ) : (
+                      <div className="result-placeholder">
+                        {result.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="result-info-container">
-                <div className="result-name">{result.name}</div>
-                <div className="result-professional-headline">
-                  {result.professionalHeadline && result.professionalHeadline.length > 50
-                    ? result.professionalHeadline.substr(0, 47) + "..."
-                    : result.professionalHeadline}
+                  <div className="result-info-container">
+                    <div className="result-name">{result.name}</div>
+                    <div className="result-professional-headline">
+                      {result.professionalHeadline &&
+                      result.professionalHeadline.length > 50
+                        ? result.professionalHeadline.substr(0, 47) + "..."
+                        : result.professionalHeadline}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
